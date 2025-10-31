@@ -5,7 +5,7 @@ Estos pasos son universales para cualquier usuario que tenga Python 3 instalado.
 Python 3: (Se recomienda la versión 3.8 o superior).
 Git: Para poder clonar el repositorio de GitHub.
 2. Clonar el Repositorio de GitHub
-El usuario debe abrir su terminal o símbolo del sistema y ejecutar el siguiente comando, reemplazando [URL-DE-TU-REPOSITORIO] con la URL real de tu proyecto en GitHub:
+El usuario debe abrir su terminal o símbolo del sistema y ejecutar el siguiente comando, reemplazando  https://github.com/olivertorgen/ERM-trivias.git con la URL real de tu proyecto en GitHub:
 Bash
 # Navega al directorio donde quieres guardar el proyecto
 cd /ruta/a/mis/proyectos
@@ -38,7 +38,7 @@ pip install Pillow
 Una vez que las dependencias están instaladas, el usuario puede ejecutar el script principal. Suponiendo que el archivo que contiene el código de la trivia se llama trivia_erm.py:
 Bash
 python trivia_erm.py
-La aplicación se iniciará en modo pantalla completa (como lo configuramos) y la persona podrá comenzar a jugar la trivia.
+La aplicación se iniciará en modo pantalla completa y la usted podrá comenzar a jugar la trivia.
 📝 Resumen del Archivo requirements.txt
-Para facilitar el paso 4, te sugiero crear un archivo llamado requirements.txt en la raíz de tu repositorio con el siguiente contenido:
+Para facilitar el paso 4, le sugiero crear un archivo llamado requirements.txt en la raíz de tu repositorio con el siguiente contenido:
 Pillow
