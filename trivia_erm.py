@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk 
-from pygame import mixer # Necesario para la funcionalidad de sonido (Asegúrate de tener Pygame instalado: pip install pygame)
+from pygame import mixer # Necesario para la funcionalidad de sonido
 
 # --- 1. DATOS DE LA TRIVIA (COMPLETOS) ---
 
@@ -131,11 +131,12 @@ class TriviaApp:
     FUENTE_BOTON = ("Arial", 22, "bold")
 
     # Rutas de assets
-    # !!! NOMBRES DE ARCHIVO ACTUALIZADOS SEGÚN TU ÚLTIMA SOLICITUD !!!
     PATH_FONDO = "assets/Fondo (1).png"  
     PATH_LOGO = "assets/Isotipo (1).png" 
     PATH_CORRECT_SOUND = "assets/sonido_correcto.mp3"
     PATH_ERROR_SOUND = "assets/sonido_incorrecto.mp3"
+    # --- NUEVA RUTA DE MÚSICA DE FONDO ---
+    PATH_MUSIC_BG = "assets/musica_fondo.mp3" 
 
     # --- NUEVAS RUTAS DE ECOPUNTOS ---
     PATH_ECOPUNTO_LEFT = "assets/ecopunto1.png"
@@ -188,19 +189,32 @@ class TriviaApp:
         
         # --- CONFIGURACIÓN DE SONIDO (Pygame Mixer) ---
         self.sound_enabled = False
+        self.music_enabled = False # Nuevo: Flag para la música de fondo
         self.sound_correct = None
         self.sound_error = None
         try:
+            # Re-inicializar por si el init de afuera fue demasiado básico
             mixer.init(frequency=44100)
             self.sound_correct = mixer.Sound(self.PATH_CORRECT_SOUND)
             self.sound_error = mixer.Sound(self.PATH_ERROR_SOUND)
             self.sound_enabled = True
+            
+            # --- LÓGICA DE MÚSICA DE FONDO ---
+            # Cargar y reproducir la música de fondo en loop (-1)
+            mixer.music.load(self.PATH_MUSIC_BG)
+            mixer.music.set_volume(0.3) # Establecer un volumen bajo (0.0 a 1.0)
+            mixer.music.play(-1) # -1 significa loop infinito
+            self.music_enabled = True
+            print(f"Música de fondo y efectos de sonido habilitados.")
+            
         except FileNotFoundError:
-            print(f"Advertencia: Archivos de sonido MP3 no encontrados en assets/. El audio estará deshabilitado.")
+            print(f"Advertencia: Archivos de sonido/música MP3 no encontrados en assets/. El audio estará deshabilitado.")
             self.sound_enabled = False
+            self.music_enabled = False
         except Exception as e:
             print(f"Advertencia: Pygame o sus dependencias fallaron. El audio estará deshabilitado. Error: {e}")
             self.sound_enabled = False
+            self.music_enabled = False
         
         self.current_screen = "welcome"
         self.master.bind('<space>', self.on_space_press)
@@ -234,6 +248,11 @@ class TriviaApp:
         if not self.sound_enabled:
             return
         try:
+            # Opcional: bajar el volumen de la música temporalmente (ducking)
+            if self.music_enabled:
+                mixer.music.set_volume(0.1) 
+                self.master.after(500, lambda: mixer.music.set_volume(0.3)) # Volver al volumen original después de 500ms
+                
             if tipo == "victoria" and self.sound_correct:
                 self.sound_correct.play()
             elif tipo == "error" and self.sound_error:
@@ -586,17 +605,18 @@ class TriviaApp:
             tk.Label(central_column_frame, text=f"Trayecto: {self.trayecto_asignado}", font=self.FUENTE_PREGUNTA, fg=self.COLOR_TEXTO, bg=self.COLOR_FONDO).pack(pady=10)
         
         # --- Lógica de Recomendación (Nivel de Conocimiento) ---
+        recomendacion = ""
         if self.puntuacion_erm >= 8:
             nivel_conocimiento = "FAN DE LA ERM, Alto"
-            recomendacion_extra = "Tecnología Sostenible y Ética (Visión de Futuro)"
+            recomendacion = f"¡Felicidades, un verdadero fan de la ERM! Has demostrado un conocimiento estelar.\n\nTe sugerimos comenzar tu recorrido en el área de **Innovación y Proyecto Final** (TeamInn/HighMaker) y en el stand de **Tecnología Sostenible y Ética** (Visión de Futuro)."
             mensaje_final = "¡Felicidades, un verdadero fan de la ERM! Has demostrado un conocimiento estelar."
         elif self.puntuacion_erm >= 5:
             nivel_conocimiento = "VISITANTE AVANZADO, Medio-Alto"
-            recomendacion_extra = "Historia y Valores de la ERM (Pilares Fundamentales)"
+            recomendacion = f"¡Muy bien! Tienes una base sólida, pero siempre hay algo más que aprender. 🤔\n\nComienza visitando el stand de tu Trayecto asignado: **{self.trayecto_asignado}**, y luego pasa por los stands de **Historia y Valores de la ERM** (Pilares Fundamentales)."
             mensaje_final = "¡Muy bien! Tienes una base sólida, pero siempre hay algo más que aprender. 🤔"
         else:
             nivel_conocimiento = "APRENDIZ DE ROBÓTICA, Bajo"
-            recomendacion_extra = "PequeBot/TrendKids (Fundamentos Visuales y Divertidos)"
+            recomendacion = f"¡Genial! No te preocupes, la feria es el lugar perfecto para sumergirte en el mundo ERM. 👍\n\nDirígete primero al stand de **{self.trayecto_asignado}** y luego a la zona de **PequeBot/TrendKids** (Fundamentos Visuales y Divertidos) para conocer lo básico de forma lúdica."
             mensaje_final = "¡Genial! No te preocupes, la feria es el lugar perfecto para sumergirte en el mundo ERM. 👍"
 
         tk.Label(central_column_frame, text=mensaje_final, font=self.FUENTE_PREGUNTA, fg=self.COLOR_TEXTO, bg=self.COLOR_FONDO, wraplength=800).pack(pady=10)
@@ -636,6 +656,8 @@ class TriviaApp:
 if __name__ == "__main__":
     # La inicialización de Pygame Mixer debe ser antes de crear la ventana principal.
     try:
+        # Se inicializa de forma básica aquí, pero la configuración real (incluyendo la carga de música)
+        # se hace dentro de TriviaApp.__init__ para usar las rutas de assets.
         mixer.init() 
     except Exception:
         pass # Si falla, la aplicación continuará sin sonido
