@@ -66,7 +66,7 @@ PREGUNTAS_ERM = [
 ]
 
 # Pregunta que incluye imágenes (Ecopuntos)
-PREGUNTA_ECOPUNTOS = "Ubicación de Ecopuntos: Si estás en el centro de Posadas, ¿dónde podrías encontrar un Ecopunto para llevar tus residuos reciclables (plástico, papel, vidrio)?"
+PREGUNTA_ECOPUNTOS = "Ubicación de Ecopuntos: Si estás en Posadas, ¿dónde podrías encontrar un Ecopunto para llevar tus residuos reciclables (plástico, papel, vidrio)?"
 
 # Preguntas de la Sección 3: Compromiso Social y Ambiental (Intercaladas)
 PREGUNTAS_ETICAS_AMBIENTALES = [
@@ -82,7 +82,7 @@ PREGUNTAS_ETICAS_AMBIENTALES = [
     },
     {
         "pregunta": PREGUNTA_ECOPUNTOS,
-        "opciones": ["Costa Sur: Ubicado en el balneario.", "Itaembé Guazú: En la calle Aguará Guazú y los Cactus.", "Parque La Cascada", "Todas son correctas"],
+        "opciones": ["Costa Sur: Ubicado en el balneario.", "Itaembé Guazú: En la calle Aguará Guazú y los Cactus.", "Parque La Cascada", "Todas son correctas."],
         "respuesta_correcta": "Todas son correctas."
     },
 ]
